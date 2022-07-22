@@ -1,0 +1,103 @@
+﻿@page "/admin/view/result/{studentId}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize(Roles ="Admin,Teacher,User")]
+@using TripleG
+@inject HttpClient http
+
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">View Results &nbsp;</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Results Info &nbsp;@reshub.Count() &nbsp;|| &nbsp;@student.FirstName &nbsp;@student.LastName
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+
+                    <tbody>
+                        @foreach (var s in reshub)
+                        {
+                            <tr>
+                                <td>@*<img class="rounded-circle me-2" width="30" height="30" src="@student.ImgPath">*@&nbsp;@student.FirstName &nbsp; @student.MiddleName &nbsp; @student.LastName </td>
+                                <td>@s.ResultId</td>
+                                <td><a class=" btn btn-info" href="/check/result/@student.StudentId/@s.ResultId">View</a></td> 
+                                <AuthorizeView Roles="Teacher,Admin">
+                                <Authorized>
+   
+                                <td><a class=" btn btn-outline-primary" href="/result/detail/@student.StudentId/@s.ResultId"><i class="fa fa-edit"></i></a></td>
+                                <td><button class="btn btn-danger" @onclick="@(()=>Delete(@s.ResultId))"><i class="fa fa-remove"></i></button></td>
+                                </Authorized>
+                                </AuthorizeView>
+                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string studentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.GetAll();
+    }
+    public Student student = new();
+    public List<ResultHub> reshub = new();
+    public Result result = new();
+    private async Task GetAll()
+    {
+        try
+        {
+            var res = await this.http.GetFromJsonAsync<Student>("api/Student/" + studentId);
+            var hub = await this.http.GetFromJsonAsync<List<ResultHub>>("api/StudentResult");
+            var info = hub.Where(s => s.StudentId.ToString().ToLower() == res.StudentId.ToString().ToLower()).ToList();
+            reshub = info;
+            this.student = res;
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private async Task GetResult(Guid id)
+    {
+        try
+        {
+
+            var hub = await this.http.GetFromJsonAsync<Result>("api/Result" + id);
+            result = hub;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    private async Task Delete(Guid id)
+    {
+        try
+        {
+            await this.http.DeleteAsync("api/StudentResult/" + id);
+            var response = await this.http.DeleteAsync("api/Result/" + id);
+            await this.GetAll();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+}
