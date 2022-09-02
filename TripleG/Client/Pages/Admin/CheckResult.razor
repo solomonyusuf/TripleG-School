@@ -9,8 +9,8 @@
 
 
 
-<div>
-    <div class="card " style="border-width: 3px;border-style: solid;">
+
+    <div align="center" class="card " style="border-width: 3px;border-style: solid;">
         <div class="card-body">
             <div class="card-title" align="center">
             <h2><i>TRIPLE "G" PRIVATE SCHOOLS.</i></h2><br>
@@ -20,42 +20,20 @@
                     <div class="col-md-6">
                         <div class="table-responsive">
                             <table class="table">
-                                <thead>
-                                    <tr></tr>
-                                </thead>
                                 <tbody>
                                     <tr>
                                         <td style="color: var(--bs-indigo);font-size: 20px;font-weight: bold;font-style: italic;">@student.FirstName&nbsp;@student.LastName</td>
                                         <td style="font-weight:bolder;">@student.Sex</td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight:bolder;">@result.Class</td>
                                         <td style="font-style:italic;"><strong>@student.StudentId</strong></td>
+                                         <td style="font-weight:bolder;">@result.Class</td>
                                     </tr>
-                                    <br />
 
                                 </tbody>
                             </table>
-                        </div><label class="form-label"></label>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="font-weight:bolder;">@parent.PhoneNumber_1<br></td>
-                                        <td style="font-weight:bolder;">@parent.Address_1</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight:bolder;">@parent.Email</td>
-                                        <td style="font-weight:bolder;">@parent.City</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
+                    </div>
                         <div class="table-responsive">
                             <table class="table">
 
@@ -124,9 +102,11 @@
                 </div>
                 <hr>
             </div>
+              <strong><a class="btn btn-outline-primary" href="/result/check">Back to Result Checker</a></strong>     
         </div><br />
-    </div>
-</div>
+        
+
+
 
 @code {
     [Parameter]

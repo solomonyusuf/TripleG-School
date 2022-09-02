@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -88,18 +89,29 @@ namespace TripleG.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            IntitializeDb.SeedData(userManager, roleManager);
+
+            try
+            {
+                IntitializeDb.SeedData(userManager, roleManager);
+
+            }
+            catch (System.AggregateException ex)
+            {
+                Console.WriteLine(ex);
+            }
+
             app.UseHttpsRedirection();
             app.UseDeveloperExceptionPage();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-
             app.UseRouting();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
-                RequestPath = new PathString("/StaticFiles")
-            });
+            //app.UseStaticFiles();
+
+            //(new StaticFileOptions()
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
+            //    RequestPath = new PathString("/StaticFiles")
+            //});
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
